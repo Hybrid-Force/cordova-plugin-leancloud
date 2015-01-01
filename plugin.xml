@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  id="com.sum.cordova.leanpush" version="0.0.1">
+  <name>LeanPush</name>
+  <js-module src="www/LeanPush.js" name="LeanPush">
+    <clobbers target="LeanPush"/>
+  </js-module>
+  <platform name="ios">
+    <config-file parent="/*" target="config.xml">
+      <feature name="LeanPush">
+        <param name="ios-package" value="CDVLeanPush"/>
+      </feature>
+    </config-file>
+
+    <!-- Plugin source code -->
+    <source-file src="src/ios/CDVLeanPush.m"/>
+
+    <!-- LeanCloud Official -->
+    <framework src="src/ios/Frameworks/AVOSCloud.framework" custom="true"/>
+
+    <!-- Other required frameworks -->
+    <framework src="SystemConfiguration.framework"/>
+    <framework src="MobileCoreServices.framework"/>
+    <framework src="CoreTelephony.framework"/>
+    <framework src="CoreLocation.framework"/>
+    <framework src="libicucore.dylib"/>
+  </platform>
+  <platform name="android">
+    <config-file parent="/*" target="res/xml/config.xml">
+      <feature name="LeanPush">
+        <param name="android-package" value="com.sum.cordova.leanpush.LeanPush"/>
+      </feature>
+    </config-file>
+    <config-file parent="/*" target="AndroidManifest.xml"/>
+    <source-file src="src/android/LeanPush.java" target-dir="src/com/sum/cordova/leanpush/LeanPush"/>
+  </platform>
+</plugin>
