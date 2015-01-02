@@ -6,15 +6,24 @@
   <js-module src="www/LeanPush.js" name="LeanPush">
     <clobbers target="LeanPush"/>
   </js-module>
+  
+  <preference name="LEAN_APP_ID"/>
+  <preference name="LEAN_APP_KEY"/>
+
   <platform name="ios">
     <config-file parent="/*" target="config.xml">
       <feature name="LeanPush">
         <param name="ios-package" value="CDVLeanPush"/>
       </feature>
+      <preference name="leancloud-appid" value="$LEAN_APP_ID"/>
+      <preference name="leancloud-appkey" value="$LEAN_APP_KEY"/>
     </config-file>
 
     <!-- Plugin source code -->
+    <header-file src="src/ios/CDVLeanPush.h"/>
     <source-file src="src/ios/CDVLeanPush.m"/>
+    <header-file src="src/ios/AppDelegate+LeanPush.h"/>
+    <source-file src="src/ios/AppDelegate+LeanPush.m"/>
 
     <!-- LeanCloud Official -->
     <framework src="src/ios/Frameworks/AVOSCloud.framework" custom="true"/>

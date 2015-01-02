@@ -1,17 +1,11 @@
 /********* CDVLeanPush.m Cordova Plugin Implementation *******/
 
-#import <Cordova/CDV.h>
-
-@interface CDVLeanPush : CDVPlugin {
-  // Member variables go here.
-}
-
-- (void)coolMethod:(CDVInvokedUrlCommand*)command;
-@end
+#import "CDVLeanPush.h"
 
 @implementation CDVLeanPush
 
-- (void)coolMethod:(CDVInvokedUrlCommand*)command
+
+- (void)subscribe:(CDVInvokedUrlCommand*)command
 {
     CDVPluginResult* pluginResult = nil;
     NSString* echo = [command.arguments objectAtIndex:0];
@@ -26,5 +20,8 @@
 
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
+
+- (void)unsubscribe:(CDVInvokedUrlCommand*)command
+{}
 
 @end
