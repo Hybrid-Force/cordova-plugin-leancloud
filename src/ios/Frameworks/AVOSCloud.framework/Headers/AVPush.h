@@ -8,6 +8,10 @@
 #import "AVConstants.h"
 #import "AVQuery.h"
 
+extern NSString *const kAVPushTargetPlatformIOS;
+extern NSString *const kAVPushTargetPlatformAndroid;
+extern NSString *const kAVPushTargetPlatformWindowsPhone;
+
 /*!
  A class which defines a push notification that can be sent from
  a client device.
@@ -73,21 +77,33 @@
 - (void)setData:(NSDictionary *)data;
 
 /**
+ *  Sets push target platforms.
+ *
+ *  @param platforms Target platforms.
+ *         Value maybe in kAVPushTargetPlatformIOS,kAVPushTargetPlatformAndroid,kAVPushTargetPlatformWindowsPhone
+ */
+- (void)setPushToTargetPlatforms:(NSArray *)platforms;
+
+/**
  *  Sets whether this push will go to Android devices.
  *
  *  @param pushToAndroid Defaults to true.
  */
 - (void)setPushToAndroid:(BOOL)pushToAndroid;
 
-/*!
- Sets whether this push will go to iOS devices. Defaults to true.
- */
 /**
  *  Sets whether this push will go to iOS devices
  *
  *  @param pushToIOS  Defaults to true
  */
 - (void)setPushToIOS:(BOOL)pushToIOS;
+
+/**
+ *  Sets whether this push will go to WinPhone devices.
+ *
+ *  @param pushToWP Defaults to true.
+ */
+- (void)setPushToWP:(BOOL)pushToWP;
 
 /**
  *  Sets to push at sometime 

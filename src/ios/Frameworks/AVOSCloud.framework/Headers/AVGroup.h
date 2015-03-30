@@ -21,8 +21,15 @@ typedef enum : NSUInteger {
     AVGroupEventMemberJoined,
     AVGroupEventMemberLeft,
     AVGroupEventMemberInvited,
-    AVGroupEventMemberKicked
+    AVGroupEventMemberKicked,
+    AVGroupEventReject
 } AVGroupEvent;
+
+typedef uint64_t AVGroupOption;
+enum : AVGroupOption {
+    AVGroupOptionNone = 0,
+    AVGroupOptionTransient = 1 << 0,
+};
 
 typedef void (^AVGroupResultBlock)(AVGroup *group, NSError *error);
 @interface AVGroup : NSObject
@@ -39,6 +46,18 @@ typedef void (^AVGroupResultBlock)(AVGroup *group, NSError *error);
  */
 + (void)createGroupWithSession:(AVSession *)session
                  groupDelegate:(id<AVGroupDelegate>)groupDelegate
+                      callback:(AVGroupResultBlock)callback;
+
+/*!
+ *  异步创建一个新group并加入此group
+ *  @param session group依赖的服务器会话
+ *  @param groupDelegate group使用的delegate
+ *  @param options － 可选参数，可以使用或 “|” 操作表示多个选项
+ *  @param callback group创建成功或失败的回调
+ */
++ (void)createGroupWithSession:(AVSession *)session
+                 groupDelegate:(id<AVGroupDelegate>)groupDelegate
+                       options:(AVGroupOption)options
                       callback:(AVGroupResultBlock)callback;
 
 /*!
@@ -79,9 +98,14 @@ typedef void (^AVGroupResultBlock)(AVGroup *group, NSError *error);
 /*!
  *  将指定peerIds踢出group
  *  @param peerIds 需要踢出group的peerId列表
- *  @return 无异常返回YES，否则返回NO
  */
 - (void)kickPeerIds:(NSArray *)peerIds;
+
+/*!
+ *  将指定peerIds踢出group
+ *  @param peerIds 需要踢出group的peerId列表
+ *  @param callback 结果回调
+ */
 - (void)kickPeerIds:(NSArray *)peerIds callback:(AVArrayResultBlock)callback;
 
 - (BOOL)kick:(NSArray *)peerIds AVDeprecated("2.6.4");
@@ -89,16 +113,20 @@ typedef void (^AVGroupResultBlock)(AVGroup *group, NSError *error);
 /*!
  *  邀请peerIds加入group
  *  @param peerIds 需要邀请的peerId列表
- *  @return 无异常返回YES，否则返回NO
  */
 - (void)invitePeerIds:(NSArray *)peerIds;
+
+/*!
+ *  邀请peerIds加入group
+ *  @param peerIds 需要邀请的peerId列表
+ *  @param callback 结果回调
+ */
 - (void)invitePeerIds:(NSArray *)peerIds callback:(AVArrayResultBlock)callback;
 
 - (BOOL)invite:(NSArray *)peerIds  AVDeprecated("2.6.4");
 
 /*!
  *  退出group
- *  @return 无异常返回YES，否则返回NO
  */
 - (void)quit;
 

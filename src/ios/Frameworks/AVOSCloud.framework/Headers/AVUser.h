@@ -102,12 +102,6 @@ A AVOS Cloud Framework User Object that is a local representation of a user pers
 +(void)verifyMobilePhone:(NSString *)code withBlock:(AVBooleanResultBlock)block;
 
 /*!
- Signs up the user. Make sure that password and username are set. This will also enforce that the username isn't already taken. 
- @return true if the sign up was successful.
- */
-- (BOOL)signUp;
-
-/*!
  Signs up the user. Make sure that password and username are set. This will also enforce that the username isn't already taken.
  @param error Error object to set on error. 
  @return whether the sign up was successful.
@@ -116,31 +110,9 @@ A AVOS Cloud Framework User Object that is a local representation of a user pers
 
 /*!
  Signs up the user asynchronously. Make sure that password and username are set. This will also enforce that the username isn't already taken.
- */
-- (void)signUpInBackground;
-
-/*!
- Signs up the user asynchronously. Make sure that password and username are set. This will also enforce that the username isn't already taken.
  @param block The block to execute. The block should have the following argument signature: (BOOL succeeded, NSError *error) 
  */
 - (void)signUpInBackgroundWithBlock:(AVBooleanResultBlock)block;
-
-/*!
- Signs up the user asynchronously. Make sure that password and username are set. This will also enforce that the username isn't already taken.
- @param target Target object for the selector.
- @param selector The selector that will be called when the asynchrounous request is complete. It should have the following signature: `(void)callbackWithResult:(NSNumber *)result error:(NSError **)error`. error will be nil on success and set if there was an error. `[result boolValue]` will tell you whether the call succeeded or not.
- */
-- (void)signUpInBackgroundWithTarget:(id)target selector:(SEL)selector;
-
-/*!
- update user's password
- @param oldPassword old password
- @param newPassword new password
- @param target Target object for the selector.
- @param selector The selector that will be called when the asynchrounous request is complete. It should have the following signature: `(void)callbackWithResult:(id)object error:(NSError *)error`. error will be nil on success and set if there was an error.
- @warning the user must have logged in, and provide both oldPassword and newPassword, otherwise can't update password successfully.
- */
-- (void)updatePassword:(NSString *)oldPassword newPassword:(NSString *)newPassword withTarget:(id)target selector:(SEL)selector;
 
 /*!
  update user's password
@@ -150,19 +122,6 @@ A AVOS Cloud Framework User Object that is a local representation of a user pers
  @warning the user must have logged in, and provide both oldPassword and newPassword, otherwise can't update password successfully.
  */
 - (void)updatePassword:(NSString *)oldPassword newPassword:(NSString *)newPassword block:(AVIdResultBlock)block;
-
-/** @name Logging in */
-
-/*!
- Makes a request to login a user with specified credentials. Returns an instance
- of the successfully logged in AVUser. This will also cache the user locally so 
- that calls to userFromCurrentUser will use the latest logged in user.
- @param username The username of the user.
- @param password The password of the user.
- @return an instance of the AVUser on success. If login failed for either wrong password or wrong username, returns nil.
- */
-+ (instancetype)logInWithUsername:(NSString *)username
-                     password:(NSString *)password;
 
 /*!
  Makes a request to login a user with specified credentials. Returns an
@@ -178,31 +137,6 @@ A AVOS Cloud Framework User Object that is a local representation of a user pers
                         error:(NSError **)error;
 
 /*!
- Makes an asynchronous request to login a user with specified credentials.
- Returns an instance of the successfully logged in AVUser. This will also cache 
- the user locally so that calls to userFromCurrentUser will use the latest logged in user.
- @param username The username of the user.
- @param password The password of the user.
- */
-+ (void)logInWithUsernameInBackground:(NSString *)username
-                             password:(NSString *)password;
-
-/*!
- Makes an asynchronous request to login a user with specified credentials.
- Returns an instance of the successfully logged in AVUser. This will also cache 
- the user locally so that calls to userFromCurrentUser will use the latest logged in user. 
- The selector for the callback should look like: myCallback:(AVUser *)user error:(NSError **)error
- @param username The username of the user.
- @param password The password of the user.
- @param target Target object for the selector.
- @param selector The selector that will be called when the asynchrounous request is complete.
- */
-+ (void)logInWithUsernameInBackground:(NSString *)username
-                             password:(NSString *)password
-                               target:(id)target
-                             selector:(SEL)selector;
-
-/*!
  Makes an asynchronous request to log in a user with specified credentials.
  Returns an instance of the successfully logged in AVUser. This will also cache 
  the user locally so that calls to userFromCurrentUser will use the latest logged in user. 
@@ -215,17 +149,21 @@ A AVOS Cloud Framework User Object that is a local representation of a user pers
                                 block:(AVUserResultBlock)block;
 
 //phoneNumber + password
-+ (instancetype)logInWithMobilePhoneNumber:(NSString *)phoneNumber
-                                  password:(NSString *)password;
+/*!
+ *  使用手机号码和密码登录
+ *  @param phoneNumber 11位电话号码
+ *  @param password 密码
+ *  @param error 发生错误通过此参数返回
+ */
 + (instancetype)logInWithMobilePhoneNumber:(NSString *)phoneNumber
                                   password:(NSString *)password
                                      error:(NSError **)error;
-+ (void)logInWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
-                                      password:(NSString *)password;
-+ (void)logInWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
-                                      password:(NSString *)password
-                                        target:(id)target
-                                      selector:(SEL)selector;
+/*!
+ *  使用手机号码和密码登录
+ *  @param phoneNumber 11位电话号码
+ *  @param password 密码
+ *  @param block 回调结果
+ */
 + (void)logInWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
                                       password:(NSString *)password
                                          block:(AVUserResultBlock)block;
@@ -238,20 +176,51 @@ A AVOS Cloud Framework User Object that is a local representation of a user pers
  *  @param block 回调结果
  */
 +(void)requestLoginSmsCode:(NSString *)phoneNumber withBlock:(AVBooleanResultBlock)block;
-+ (instancetype)logInWithMobilePhoneNumber:(NSString *)phoneNumber
-                                   smsCode:(NSString *)code;
+
+/*!
+ *  使用手机号码和验证码登录
+ *  @param phoneNumber 11位电话号码
+ *  @param code 6位验证码
+ *  @param error 发生错误通过此参数返回
+ */
 + (instancetype)logInWithMobilePhoneNumber:(NSString *)phoneNumber
                                    smsCode:(NSString *)code
                                      error:(NSError **)error;
-+ (void)logInWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
-                                       smsCode:(NSString *)code;
-+ (void)logInWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
-                                       smsCode:(NSString *)code
-                                        target:(id)target
-                                      selector:(SEL)selector;
+
+/*!
+ *  使用手机号码和验证码登录
+ *  @param phoneNumber 11位电话号码
+ *  @param code 6位验证码
+ *  @param block 回调结果
+ */
 + (void)logInWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
                                        smsCode:(NSString *)code
                                          block:(AVUserResultBlock)block;
+
+
+/*!
+ *  使用手机号码和验证码注册或登录
+ *  用于手机号直接注册用户，需要使用 [AVOSCloud requestSmsCodeWithPhoneNumber:callback:] 获取验证码
+ *  @param phoneNumber 11位电话号码
+ *  @param code 6位验证码
+ *  @param error 发生错误通过此参数返回
+ */
++ (instancetype)signUpOrLoginWithMobilePhoneNumber:(NSString *)phoneNumber
+                                           smsCode:(NSString *)code
+                                             error:(NSError **)error;
+
+/*!
+ *  使用手机号码和验证码注册或登录
+ *  用于手机号直接注册用户，需要使用 [AVOSCloud requestSmsCodeWithPhoneNumber:callback:] 获取验证码
+ *  @param phoneNumber 11位电话号码
+ *  @param code 6位验证码
+ *  @param block 回调结果
+ */
++ (void)signUpOrLoginWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
+                                               smsCode:(NSString *)code
+                                                 block:(AVUserResultBlock)block;
+
+
 /** @name Logging Out */
 
 /*!
@@ -261,13 +230,6 @@ A AVOS Cloud Framework User Object that is a local representation of a user pers
 
 /** @name Requesting a Password Reset */
 
-/*!
- Send a password reset request for a specified email. If a user account exists with that email,
- an email will be sent to that address with instructions on how to reset their password.
- @param email Email of the account to send a reset password request.
- @return true if the reset email request is successful. False if no account was found for the email address.
- */
-+ (BOOL)requestPasswordResetForEmail:(NSString *)email;
 
 /*!
  Send a password reset request for a specified email and sets an error object. If a user
@@ -279,26 +241,6 @@ A AVOS Cloud Framework User Object that is a local representation of a user pers
  */
 + (BOOL)requestPasswordResetForEmail:(NSString *)email
                                error:(NSError **)error;
-
-/*!
- Send a password reset request asynchronously for a specified email and sets an
- error object. If a user account exists with that email, an email will be sent to 
- that address with instructions on how to reset their password.
- @param email Email of the account to send a reset password request.
- */
-+ (void)requestPasswordResetForEmailInBackground:(NSString *)email;
-
-/*!
- Send a password reset request asynchronously for a specified email and sets an error object.
- If a user account exists with that email, an email will be sent to that address with instructions
- on how to reset their password.
- @param email Email of the account to send a reset password request.
- @param target Target object for the selector.
- @param selector The selector that will be called when the asynchronous request is complete. It should have the following signature: (void)callbackWithResult:(NSNumber *)result error:(NSError **)error. error will be nil on success and set if there was an error. [result boolValue] will tell you whether the call succeeded or not.
- */
-+ (void)requestPasswordResetForEmailInBackground:(NSString *)email
-                                          target:(id)target
-                                        selector:(SEL)selector;
 
 /*!
  Send a password reset request asynchronously for a specified email.
@@ -335,6 +277,118 @@ A AVOS Cloud Framework User Object that is a local representation of a user pers
  Creates a query for AVUser objects.
  */
 + (AVQuery *)query;
+@end
 
+@interface AVUser (Deprecated)
+
+/*!
+ Signs up the user. Make sure that password and username are set. This will also enforce that the username isn't already taken.
+ @return true if the sign up was successful.
+ */
+- (BOOL)signUp AVDeprecated("2.6.10");
+
+/*!
+ Signs up the user asynchronously. Make sure that password and username are set. This will also enforce that the username isn't already taken.
+ */
+- (void)signUpInBackground AVDeprecated("2.6.10");
+
+/*!
+ Signs up the user asynchronously. Make sure that password and username are set. This will also enforce that the username isn't already taken.
+ @param target Target object for the selector.
+ @param selector The selector that will be called when the asynchrounous request is complete. It should have the following signature: `(void)callbackWithResult:(NSNumber *)result error:(NSError **)error`. error will be nil on success and set if there was an error. `[result boolValue]` will tell you whether the call succeeded or not.
+ */
+- (void)signUpInBackgroundWithTarget:(id)target selector:(SEL)selector AVDeprecated("2.6.10");
+
+/*!
+ update user's password
+ @param oldPassword old password
+ @param newPassword new password
+ @param target Target object for the selector.
+ @param selector The selector that will be called when the asynchrounous request is complete. It should have the following signature: `(void)callbackWithResult:(id)object error:(NSError *)error`. error will be nil on success and set if there was an error.
+ @warning the user must have logged in, and provide both oldPassword and newPassword, otherwise can't update password successfully.
+ */
+- (void)updatePassword:(NSString *)oldPassword newPassword:(NSString *)newPassword withTarget:(id)target selector:(SEL)selector AVDeprecated("2.6.10");
+
+/*!
+ Makes a request to login a user with specified credentials. Returns an instance
+ of the successfully logged in AVUser. This will also cache the user locally so
+ that calls to userFromCurrentUser will use the latest logged in user.
+ @param username The username of the user.
+ @param password The password of the user.
+ @return an instance of the AVUser on success. If login failed for either wrong password or wrong username, returns nil.
+ */
++ (instancetype)logInWithUsername:(NSString *)username
+                         password:(NSString *)password  AVDeprecated("2.6.10");
+
+/*!
+ Makes an asynchronous request to login a user with specified credentials.
+ Returns an instance of the successfully logged in AVUser. This will also cache
+ the user locally so that calls to userFromCurrentUser will use the latest logged in user.
+ @param username The username of the user.
+ @param password The password of the user.
+ */
++ (void)logInWithUsernameInBackground:(NSString *)username
+                             password:(NSString *)password AVDeprecated("2.6.10");
+
+/*!
+ Makes an asynchronous request to login a user with specified credentials.
+ Returns an instance of the successfully logged in AVUser. This will also cache
+ the user locally so that calls to userFromCurrentUser will use the latest logged in user.
+ The selector for the callback should look like: myCallback:(AVUser *)user error:(NSError **)error
+ @param username The username of the user.
+ @param password The password of the user.
+ @param target Target object for the selector.
+ @param selector The selector that will be called when the asynchrounous request is complete.
+ */
++ (void)logInWithUsernameInBackground:(NSString *)username
+                             password:(NSString *)password
+                               target:(id)target
+                             selector:(SEL)selector AVDeprecated("2.6.10");
+
++ (instancetype)logInWithMobilePhoneNumber:(NSString *)phoneNumber
+                                  password:(NSString *)password AVDeprecated("2.6.10");
++ (void)logInWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
+                                      password:(NSString *)password AVDeprecated("2.6.10");
++ (void)logInWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
+                                      password:(NSString *)password
+                                        target:(id)target
+                                      selector:(SEL)selector AVDeprecated("2.6.10");
+
++ (instancetype)logInWithMobilePhoneNumber:(NSString *)phoneNumber
+                                   smsCode:(NSString *)code AVDeprecated("2.6.10");
++ (void)logInWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
+                                       smsCode:(NSString *)code AVDeprecated("2.6.10");
++ (void)logInWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
+                                       smsCode:(NSString *)code
+                                        target:(id)target
+                                      selector:(SEL)selector AVDeprecated("2.6.10");
+
+/*!
+ Send a password reset request for a specified email. If a user account exists with that email,
+ an email will be sent to that address with instructions on how to reset their password.
+ @param email Email of the account to send a reset password request.
+ @return true if the reset email request is successful. False if no account was found for the email address.
+ */
++ (BOOL)requestPasswordResetForEmail:(NSString *)email AVDeprecated("2.6.10");
+
+/*!
+ Send a password reset request asynchronously for a specified email and sets an
+ error object. If a user account exists with that email, an email will be sent to
+ that address with instructions on how to reset their password.
+ @param email Email of the account to send a reset password request.
+ */
++ (void)requestPasswordResetForEmailInBackground:(NSString *)email AVDeprecated("2.6.10");
+
+/*!
+ Send a password reset request asynchronously for a specified email and sets an error object.
+ If a user account exists with that email, an email will be sent to that address with instructions
+ on how to reset their password.
+ @param email Email of the account to send a reset password request.
+ @param target Target object for the selector.
+ @param selector The selector that will be called when the asynchronous request is complete. It should have the following signature: (void)callbackWithResult:(NSNumber *)result error:(NSError **)error. error will be nil on success and set if there was an error. [result boolValue] will tell you whether the call succeeded or not.
+ */
++ (void)requestPasswordResetForEmailInBackground:(NSString *)email
+                                          target:(id)target
+                                        selector:(SEL)selector AVDeprecated("2.6.10");
 
 @end

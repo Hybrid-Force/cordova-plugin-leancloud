@@ -77,6 +77,13 @@ typedef NS_ENUM(int, AVReportPolicy){
  */
 + (void)setCrashReportEnabled:(BOOL)value;
 
+/** 开启CrashReport收集, 默认是开启状态.
+ 
+ @param value 设置成NO,就可以关闭CrashReport收集.
+ @param completion 设置完成后回调.
+ @return void.
+ */
++ (void)setCrashReportEnabled:(BOOL)value completion:(void (^)(void))completion;
 
 /** 开启CrashReport收集, 并且尝试忽略异常.
  @discuss 当异常被捕获后,如果开启了CrashReport功能,异常会被自动捕获,如果开启ignore,会尝试阻止app崩溃, 如果阻止成功,则会提示(UIAlertView)用户程序可能不稳定,请用户选择继续运行还是退出.

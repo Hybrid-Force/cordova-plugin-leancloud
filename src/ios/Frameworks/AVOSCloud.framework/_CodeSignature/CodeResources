@@ -34,7 +34,7 @@
 		</data>
 		<key>Headers/AVAnalytics.h</key>
 		<data>
-		3OQyCs3tsNRFmoys63TnO4cKXvw=
+		fV++MFbI1qyE7AW2AklIiGAB09Q=
 		</data>
 		<key>Headers/AVAnonymousUtils.h</key>
 		<data>
@@ -62,7 +62,7 @@
 		</data>
 		<key>Headers/AVGroup.h</key>
 		<data>
-		X+7mddaQJN0kO+ca2b1AGiyKCFI=
+		WjxV1z/pSNKMptuOrrHRNeRLhl8=
 		</data>
 		<key>Headers/AVHistoryMessage.h</key>
 		<data>
@@ -98,7 +98,7 @@
 		</data>
 		<key>Headers/AVPush.h</key>
 		<data>
-		vRy/8Prwv7H9gulbOfMmWxhzpEw=
+		21X99s3wcQgWwMIxV2cPJLCfBBI=
 		</data>
 		<key>Headers/AVQuery.h</key>
 		<data>
@@ -126,7 +126,7 @@
 		</data>
 		<key>Headers/AVSignature.h</key>
 		<data>
-		NbhPXlvrIeiObXG2fSvJWICVpK4=
+		PEwNUPW9Ru4RpJm/er7/vPWI3Nc=
 		</data>
 		<key>Headers/AVStatus.h</key>
 		<data>
@@ -138,7 +138,7 @@
 		</data>
 		<key>Headers/AVUser.h</key>
 		<data>
-		QlM0NaUm57V0Th3QQX/mZJ0qrKI=
+		atHiEFqQbYIzfUwUrgFTazXfdzs=
 		</data>
 		<key>Headers/AVUserFeedback.h</key>
 		<data>
@@ -151,6 +151,10 @@
 		<key>Headers/AVUserFeedbackThread.h</key>
 		<data>
 		7/woTpTJr1e5YqlwTo41+E9Mn08=
+		</data>
+		<key>Info.plist</key>
+		<data>
+		wMMAqMkB0OgFC41H4b03MU+o4FA=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -249,7 +253,7 @@
 		</data>
 		<key>Headers/AVAnalytics.h</key>
 		<data>
-		3OQyCs3tsNRFmoys63TnO4cKXvw=
+		fV++MFbI1qyE7AW2AklIiGAB09Q=
 		</data>
 		<key>Headers/AVAnonymousUtils.h</key>
 		<data>
@@ -277,7 +281,7 @@
 		</data>
 		<key>Headers/AVGroup.h</key>
 		<data>
-		X+7mddaQJN0kO+ca2b1AGiyKCFI=
+		WjxV1z/pSNKMptuOrrHRNeRLhl8=
 		</data>
 		<key>Headers/AVHistoryMessage.h</key>
 		<data>
@@ -313,7 +317,7 @@
 		</data>
 		<key>Headers/AVPush.h</key>
 		<data>
-		vRy/8Prwv7H9gulbOfMmWxhzpEw=
+		21X99s3wcQgWwMIxV2cPJLCfBBI=
 		</data>
 		<key>Headers/AVQuery.h</key>
 		<data>
@@ -341,7 +345,7 @@
 		</data>
 		<key>Headers/AVSignature.h</key>
 		<data>
-		NbhPXlvrIeiObXG2fSvJWICVpK4=
+		PEwNUPW9Ru4RpJm/er7/vPWI3Nc=
 		</data>
 		<key>Headers/AVStatus.h</key>
 		<data>
@@ -353,7 +357,7 @@
 		</data>
 		<key>Headers/AVUser.h</key>
 		<data>
-		QlM0NaUm57V0Th3QQX/mZJ0qrKI=
+		atHiEFqQbYIzfUwUrgFTazXfdzs=
 		</data>
 		<key>Headers/AVUserFeedback.h</key>
 		<data>
@@ -434,54 +438,97 @@
 	</dict>
 	<key>rules</key>
 	<dict>
-		<key>.*</key>
+		<key>^</key>
 		<true/>
-		<key>^Info.plist$</key>
+		<key>^.*\.lproj/</key>
+		<dict>
+			<key>optional</key>
+			<true/>
+			<key>weight</key>
+			<real>1000</real>
+		</dict>
+		<key>^.*\.lproj/locversion.plist$</key>
 		<dict>
 			<key>omit</key>
 			<true/>
 			<key>weight</key>
-			<real>10</real>
+			<real>1100</real>
 		</dict>
-		<key>^ResourceRules.plist$</key>
-		<dict>
-			<key>omit</key>
-			<true/>
-			<key>weight</key>
-			<real>100</real>
-		</dict>
+		<key>^version.plist$</key>
+		<true/>
 	</dict>
 	<key>rules2</key>
 	<dict>
-		<key>.*</key>
-		<true/>
-		<key>^(Frameworks|SharedFrameworks|Plugins|Plug-ins|XPCServices|Helpers|MacOS)/</key>
+		<key>.*\.dSYM($|/)</key>
+		<dict>
+			<key>weight</key>
+			<real>11</real>
+		</dict>
+		<key>^</key>
+		<dict>
+			<key>weight</key>
+			<real>20</real>
+		</dict>
+		<key>^(.*/)?\.DS_Store$</key>
+		<dict>
+			<key>omit</key>
+			<true/>
+			<key>weight</key>
+			<real>2000</real>
+		</dict>
+		<key>^(Frameworks|SharedFrameworks|PlugIns|Plug-ins|XPCServices|Helpers|MacOS|Library/(Automator|Spotlight|LoginItems))/</key>
 		<dict>
 			<key>nested</key>
 			<true/>
 			<key>weight</key>
-			<real>0.0</real>
+			<real>10</real>
 		</dict>
-		<key>^Info.plist$</key>
+		<key>^.*</key>
+		<true/>
+		<key>^.*\.lproj/</key>
+		<dict>
+			<key>optional</key>
+			<true/>
+			<key>weight</key>
+			<real>1000</real>
+		</dict>
+		<key>^.*\.lproj/locversion.plist$</key>
 		<dict>
 			<key>omit</key>
+			<true/>
+			<key>weight</key>
+			<real>1100</real>
+		</dict>
+		<key>^Info\.plist$</key>
+		<dict>
+			<key>omit</key>
+			<true/>
+			<key>weight</key>
+			<real>20</real>
+		</dict>
+		<key>^PkgInfo$</key>
+		<dict>
+			<key>omit</key>
+			<true/>
+			<key>weight</key>
+			<real>20</real>
+		</dict>
+		<key>^[^/]+$</key>
+		<dict>
+			<key>nested</key>
 			<true/>
 			<key>weight</key>
 			<real>10</real>
 		</dict>
-		<key>^ResourceRules.plist$</key>
+		<key>^embedded\.provisionprofile$</key>
 		<dict>
-			<key>omit</key>
-			<true/>
 			<key>weight</key>
-			<real>100</real>
+			<real>20</real>
 		</dict>
-		<key>^[^/]+$</key>
+		<key>^version\.plist$</key>
 		<dict>
-			<key>top</key>
-			<true/>
 			<key>weight</key>
-			<real>0.0</real>
+			<real>20</real>
 		</dict>
 	</dict>
 </dict>

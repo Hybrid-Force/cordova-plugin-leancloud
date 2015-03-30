@@ -16,6 +16,7 @@
 @property (nonatomic, strong) NSString *nonce;
 @property (nonatomic, strong) NSString *action  AVDeprecated("2.6.4");
 @property (nonatomic, strong) NSArray *signedPeerIds;
+@property (nonatomic, strong) NSError *error;
 
 @end
 
