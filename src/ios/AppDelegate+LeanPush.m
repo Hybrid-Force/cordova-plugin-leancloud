@@ -45,6 +45,7 @@ void swizzleMethod(Class c, SEL originalSelector)
         swizzleMethod(cls, @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:));
         swizzleMethod(cls, @selector(application:didFailToRegisterForRemoteNotificationsWithError:));
         swizzleMethod(cls, @selector(application:didReceiveRemoteNotification:));
+        swizzleMethod(cls, @selector(applicationDidBecomeActive:));
     });
 }
 
@@ -103,6 +104,21 @@ void swizzleMethod(Class c, SEL originalSelector)
     return YES;
 }
 
+- (void)swizzled_applicationDidBecomeActive:(UIApplication *)application
+{
+    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    int num=application.applicationIconBadgeNumber;
+    if(num!=0){
+        AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+        [currentInstallation setBadge:0];
+        [currentInstallation saveEventually];
+        application.applicationIconBadgeNumber=0;
+    }
+}
+
+- (void)noop_applicationDidBecomeActive:(UIApplication *)application
+{}
+
 
 - (void)swizzled_application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
@@ -111,8 +127,8 @@ void swizzleMethod(Class c, SEL originalSelector)
     NSLog(@"didRegister");
     AVInstallation *currentInstallation = [AVInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:deviceToken];
+    [currentInstallation setBadge:0];
     [currentInstallation saveInBackground];
-    // TODO: reset badge number
 }
 
 - (void)noop_application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
@@ -141,6 +157,14 @@ void swizzleMethod(Class c, SEL originalSelector)
         // The application was just brought from the background to the foreground,
         // so we consider the app as having been "opened by a push notification."
         [AVAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
+    }
+
+    int num=application.applicationIconBadgeNumber;
+    if(num!=0){
+        AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+        [currentInstallation setBadge:0];
+        [currentInstallation saveEventually];
+        application.applicationIconBadgeNumber=0;
     }
     
     NSLog(@"receiveRemoteNotification");
