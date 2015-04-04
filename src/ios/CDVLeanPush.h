@@ -10,6 +10,7 @@
 
 - (void)subscribe:(CDVInvokedUrlCommand *)command;
 - (void)unsubscribe:(CDVInvokedUrlCommand *)command;
+- (void)clearSubscription:(CDVInvokedUrlCommand *)command;
 
 - (void)onViewStart:(CDVInvokedUrlCommand *)command;
 - (void)onViewEnd:(CDVInvokedUrlCommand *)command;

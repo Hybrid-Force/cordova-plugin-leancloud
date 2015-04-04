@@ -42,6 +42,20 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)clearSubscription:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult* pluginResult = nil;
+
+    NSLog(@"CDVLeanPush clearSubscription");
+
+    AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+    [currentInstallation setObject:[[NSArray alloc] init] forKey:@"channels"];
+    [currentInstallation saveInBackground];
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 - (void)onViewStart:(CDVInvokedUrlCommand*)command
 {
     CDVPluginResult* pluginResult = nil;

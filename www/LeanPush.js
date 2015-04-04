@@ -11,6 +11,11 @@ module.exports = {
         exec(success, error, "LeanPush", "unsubscribe", [channel]);
     },
 
+    clearSubscription: function(success, error) {
+        console.log('clearSubscription');
+        exec(success, error, "LeanPush", "clearSubscription", []);
+    },
+
     onViewStart: function(viewId, success, error) {
         console.log('onViewStart', viewId);
         exec(success, error, "LeanPush", "onViewStart", [viewId]);
