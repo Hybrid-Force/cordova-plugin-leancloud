@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="com.sum.cordova.leanpush" version="0.0.2">
+  id="com.sum.cordova.leancloud" version="0.1.0">
   <name>LeanPush</name>
   <js-module src="www/LeanPush.js" name="LeanPush">
     <clobbers target="LeanPush"/>
+  </js-module>
+  <js-module src="www/LeanAnalytics.js" name="LeanAnalytics">
+    <clobbers target="LeanAnalytics"/>
   </js-module>
   
   <preference name="LEAN_APP_ID"/>
@@ -15,11 +18,16 @@
       <feature name="LeanPush">
         <param name="ios-package" value="CDVLeanPush"/>
       </feature>
+      <feature name="LeanAnalytics">
+        <param name="ios-package" value="CDVLeanAnalytics"/>
+      </feature>
       <preference name="leancloud-appid" value="$LEAN_APP_ID"/>
       <preference name="leancloud-appkey" value="$LEAN_APP_KEY"/>
     </config-file>
 
     <!-- Plugin source code -->
+    <header-file src="src/ios/CDVLeanAnalytics.h"/>
+    <source-file src="src/ios/CDVLeanAnalytics.m"/>
     <header-file src="src/ios/CDVLeanPush.h"/>
     <source-file src="src/ios/CDVLeanPush.m"/>
     <header-file src="src/ios/AppDelegate+LeanPush.h"/>
@@ -35,13 +43,46 @@
     <framework src="CoreLocation.framework"/>
     <framework src="libicucore.dylib"/>
   </platform>
-  <!-- <platform name="android">
+  <platform name="android">
     <config-file parent="/*" target="res/xml/config.xml">
       <feature name="LeanPush">
-        <param name="android-package" value="com.sum.cordova.leanpush.LeanPush"/>
+        <param name="android-package" value="com.sum.cordova.leancloud.LeanPush"/>
+        <param name="onload" value="true" />
       </feature>
+      <feature name="LeanAnalytics">
+        <param name="android-package" value="com.sum.cordova.leancloud.LeanAnalytics"/>
+      </feature>
+      <preference name="leancloud-appid" value="$LEAN_APP_ID"/>
+      <preference name="leancloud-appkey" value="$LEAN_APP_KEY"/>
+    </config-file>
+    <config-file target="AndroidManifest.xml" parent="/manifest">
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+      <uses-permission android:name="android.permission.INTERNET"/>
+      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+      <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+      <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+      <uses-permission android:name="android.permission.READ_LOGS" />
+    </config-file>
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
+      <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <action android:name="android.intent.action.USER_PRESENT" />
+        </intent-filter>
+      </receiver>
+      <service android:name="com.avos.avoscloud.PushService"/>
+      <meta-data android:name="leancloud" android:value="LeanCloud"/>
     </config-file>
     <config-file parent="/*" target="AndroidManifest.xml"/>
-    <source-file src="src/android/LeanPush.java" target-dir="src/com/sum/cordova/leanpush/LeanPush"/>
-  </platform> -->
+    <source-file src="src/android/LeanApplication.java" target-dir="src/com/sum/cordova/leancloud"/>
+    <source-file src="src/android/LeanPush.java" target-dir="src/com/sum/cordova/leancloud"/>
+    <source-file src="src/android/LeanAnalytics.java" target-dir="src/com/sum/cordova/leancloud"/>
+    <source-file src="src/android/leancloud/Java-WebSocket-1.2.0-leancloud.jar" target-dir="libs" framework="true"/>
+    <source-file src="src/android/leancloud/android-async-http-1.4.6.jar" target-dir="libs" framework="true"/>
+    <source-file src="src/android/leancloud/avoscloud-push-v3.1.4.jar" target-dir="libs" framework="true"/>
+    <source-file src="src/android/leancloud/avoscloud-sdk-v3.1.4.jar" target-dir="libs" framework="true"/>
+    <source-file src="src/android/leancloud/avoscloud-statistics-v3.1.4.jar" target-dir="libs" framework="true"/>
+    <source-file src="src/android/leancloud/fastjson.jar" target-dir="libs" framework="true"/>
+    <source-file src="src/android/leancloud/httpmime-4.2.4.jar" target-dir="libs" framework="true"/>
+  </platform>
 </plugin>

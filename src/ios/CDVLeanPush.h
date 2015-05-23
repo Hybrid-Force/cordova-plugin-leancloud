@@ -12,12 +12,4 @@
 - (void)unsubscribe:(CDVInvokedUrlCommand *)command;
 - (void)clearSubscription:(CDVInvokedUrlCommand *)command;
 
-- (void)onViewStart:(CDVInvokedUrlCommand *)command;
-- (void)onViewEnd:(CDVInvokedUrlCommand *)command;
-- (void)event:(CDVInvokedUrlCommand *)command;
-- (void)onEventStart:(CDVInvokedUrlCommand *)command;
-- (void)onEventEnd:(CDVInvokedUrlCommand *)command;
-- (void)onKVEventStart:(CDVInvokedUrlCommand *)command;
-- (void)onKVEventEnd:(CDVInvokedUrlCommand *)command;
-
 @end
