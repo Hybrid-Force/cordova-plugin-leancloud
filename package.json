@@ -1,0 +1,30 @@
+{
+  "name": "cordova-plugin-leancloud",
+  "version": "0.1.1",
+  "description": "A Cordova plugin for LeanCloud Push and Analytics services",
+  "cordova": {
+    "id": "cordova-plugin-leancloud",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hybrid-Force/cordova-plugin-leancloud.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-ios",
+    "cordova-android",
+    "leancloud",
+    "push",
+    "analytics"
+  ],
+  "author": "Derek Hsu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Hybrid-Force/cordova-plugin-leancloud/issues"
+  },
+  "homepage": "https://github.com/Hybrid-Force/cordova-plugin-leancloud#readme"
+}
