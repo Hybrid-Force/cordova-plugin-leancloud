@@ -7,22 +7,27 @@ Cordova plugin for [LeanCloud](https://leancloud.cn) push notification
 
 ## Installation
 
+
+- Fetch from cordova npm
+
 ```shell
  cordova plugin add cordova-plugin-leanpush  --variable LEAN_APP_ID=<YOUR_LEANCOULD_APP_ID> --variable LEAN_APP_KEY=<YOUR_LEANCOULD_APP_KEY>
 ```
 
+
+
+
 - Add this to your `gulpfile.js`
 
 ```js
-gulp.task('lpush-intall', function(done){
-    require('./plugins/cordova-plugin-leanpush/other/cordova_leanpush_install.js')(__dirname, gulp, done);
+gulp.task('lpush-install', function(done){
+    require('./plugins/cordova-plugin-leanpush/lpush-install.js')(__dirname, gulp, done);
 });
 ```
 
+- `npm install --save-dev gulp-xml-editor gulp-replace xml2js && npm install`
+
 - Then exectue this gulp task by running `gulp install lpush-install` in shell.
-
-
-- There is a js script you need to load into the webview in `project_root_path/plugins/cordova-plugin-leanpush/other/lpush.js`,  you could copy it into your `www` directory and add a `<script>` to your `index.html`
 
 - Done.
 
