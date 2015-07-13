@@ -3,7 +3,7 @@ cordova-plugin-leanpush
 
 Cordova plugin for [LeanCloud](https://leancloud.cn) push notification
 
-暂时先不要使用，自己实现了功能， 正在插件包装中！
+
 
 ## Installation
 
@@ -166,6 +166,7 @@ There are two ways, both will be fired when notification comes
 - `onNotificationReceived`
 
 - `$rootScope.$emit('leancloud:notificationReceived')`
+
 
 You can choose one of them, but may not both.
 
