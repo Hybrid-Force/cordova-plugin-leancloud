@@ -3,6 +3,8 @@ cordova-plugin-leanpush
 
 Cordova plugin for [LeanCloud](https://leancloud.cn) push notification
 
+暂时先不要使用，自己实现了功能， 正在插件包装中！
+
 ## Installation
 
 ```shell
