@@ -1,6 +1,10 @@
 var exec = require('cordova/exec');
 
 module.exports = {
+    getInstallation: function(success, error) {
+        console.log('getInstallation');
+        exec(success, error, "LeanPush", "getInstallation", []);
+    },
     subscribe: function(channel, success, error) {
         console.log('subscribe', channel);
         exec(success, error, "LeanPush", "subscribe", [channel]);
