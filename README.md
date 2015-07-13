@@ -21,13 +21,13 @@ Cordova plugin for [LeanCloud](https://leancloud.cn) push notification
 
 ```js
 gulp.task('lpush-install', function(done){
-    require('./plugins/cordova-plugin-leanpush/lpush-install.js')(__dirname, gulp, done);
+    require('./plugins/cordova-plugin-leanpush/lpush-installer.js')(__dirname, done);
 });
 ```
 
-- `npm install --save-dev gulp-xml-editor gulp-replace xml2js && npm install`
+- `npm install --save-dev xml2js && npm install`
 
-- Then exectue this gulp task by running `gulp install lpush-install` in shell.
+- Then exectue this gulp task by running `gulp lpush-install` in shell.
 
 - Done.
 
