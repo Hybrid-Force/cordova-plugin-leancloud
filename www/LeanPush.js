@@ -21,7 +21,7 @@ module.exports = {
     },
     init: function(fun) {
         console.log('LeanPush Initialization');
-        window.LeanPush.onNotificationReceived(fun || function(notice){
+        window.LeanPush.onNotificationReceived(fun || function(notice) {
             console.log('leancloud:notificationReceived', notice);
         });
 
@@ -41,10 +41,10 @@ module.exports = {
             }
         };
         cordova.exec(window.LeanPush.init.__cb, null, "LeanPush", "getCacheResult", []);
-        cordova.exec(null, null, "LeanPush", "onNotificationReceived", ['LeanPush.init.__cb']);
+        cordova.exec(null, null, "LeanPush", "onNotificationReceived", ['window.LeanPush.init.__cb']);
 
     },
-    onNotificationReceived :function(f) {
+    onNotificationReceived: function(f) {
         window.LeanPush.onNotificationReceived._fun = f;
     }
 };

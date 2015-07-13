@@ -62,7 +62,7 @@ public class LeanPush extends CordovaPlugin {
             return true;
         }
         if(action.equals(ACTION_ON_NOTIFICATION_RECEIVED)){
-            onMessage(args.getString(0), callbackContext);
+            onNotificationReceived(args.getString(0), callbackContext);
             return true;
         }
         if(action.equals("getCacheResult")){
@@ -130,6 +130,7 @@ public class LeanPush extends CordovaPlugin {
         }
     }
 
-    private void getCacheResult(final CallbackContext callbackContext)} {
+    private void getCacheResult(final CallbackContext callbackContext){
     callbackContext.success(cacheResult);
+    }
 }

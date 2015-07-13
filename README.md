@@ -31,6 +31,11 @@ gulp.task('lpush-install', function(done){
 
 - Done.
 
+### Known Android Build Issue
+
+See [Attention/Android Build Issue](#android-build-issue)
+
+
 
 ## Usage
 
@@ -94,7 +99,7 @@ is the better way to go.
 
 ### IOS
 
-See the [Attention Below](#Attention), the webview can't `alert` when `onResume`, so here only
+See the [Attention Below](#attention), the webview can't `alert` when `onResume`, so here only
 
 1. notice from close
 2. notice while foreground
@@ -126,7 +131,7 @@ The `onNotificationReceived callback`  and the `$rootScope.$emit('leancloud:noti
 
 ### Android Quirk
 
-In order to receive push from android, I change the default `MainActivity` and `Application Entry`  in that gulp task. Details in the [lpush_install.js](https://github.com/BenBBear/cordova-plugin-leanpush/blob/master/lpush-install.js).
+In order to receive push from android, I change the default `MainActivity` and `Application Entry`  in that gulp task. Details in the [lpush_installer.js](https://github.com/BenBBear/cordova-plugin-leanpush/blob/master/lpush-installer.js).
 
 > So if you use another plugin that also goes this way, then there gonna be conflicts.
 
@@ -162,7 +167,38 @@ There are two ways, both will be fired when notification comes
 
 - `$rootScope.$emit('leancloud:notificationReceived')`
 
-It may not good to use both of them.
+You can choose one of them, but may not both.
+
+
+###  Android Build Issue
+
+- **Error: duplicate files during packaging of APK**
+
+**How to Solve:**
+
+
+insert following code into the **android tag** of `platforms/android/build.gradle`
+
+```groovy
+ packagingOptions {
+       exclude 'META-INF/LICENSE.txt'
+ 	   exclude 'META-INF/NOTICE.txt'
+}
+```
+
+It should look like below
+
+```groovy
+android{
+   packagingOptions {
+       exclude 'META-INF/LICENSE.txt'
+ 	   exclude 'META-INF/NOTICE.txt'
+   }
+    //stuff
+}
+```
+
+
 
 ## LICENSE
 
