@@ -76,7 +76,7 @@
 
 
 
-- (void)onNotificationRecieved:(CDVInvokedUrlCommand *)command
+- (void)onNotificationReceived:(CDVInvokedUrlCommand *)command
 {
     self.callback = [command.arguments objectAtIndex:0];
 //    NSMutableDictionary* options = [command.arguments objectAtIndex:0];

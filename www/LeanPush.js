@@ -21,7 +21,7 @@ module.exports = {
     },
     init: function(fun) {
         console.log('LeanPush Initialization');
-        window.LeanPush.onNotificationRecieved(fun || function(notice){
+        window.LeanPush.onNotificationReceived(fun || function(notice){
             console.log('leancloud:notificationReceived', notice);
         });
 
@@ -35,16 +35,16 @@ module.exports = {
             if (notice) {
                 if (typeof angular != 'undefined') {
                     var $body = angular.element(document.body);
-                    $body.scope().$root.$emit('leancloud:notificationRecieved', notice);
+                    $body.scope().$root.$emit('leancloud:notificationReceived', notice);
                 }
-                window.LeanPush.onNotificationRecieved._fun(notice);
+                window.LeanPush.onNotificationReceived._fun(notice);
             }
         };
         cordova.exec(window.LeanPush.init.__cb, null, "LeanPush", "getCacheResult", []);
-        cordova.exec(null, null, "LeanPush", "onNotificationRecieved", ['LeanPush.init.__cb']);
+        cordova.exec(null, null, "LeanPush", "onNotificationReceived", ['LeanPush.init.__cb']);
 
     },
-    onNotificationRecieved :function(f) {
-        window.LeanPush.onNotificationRecieved._fun = f;
+    onNotificationReceived :function(f) {
+        window.LeanPush.onNotificationReceived._fun = f;
     }
 };

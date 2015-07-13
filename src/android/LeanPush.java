@@ -28,7 +28,7 @@ public class LeanPush extends CordovaPlugin {
     public static final String ACTION_UNSUBSCRIBE = "unsubscribe";
     public static final String ACTION_CLEAR_SUBSCRIPTION = "clearSubscription";
     public static final String ACTION_GET_INSTALLTION = "getInstallation";
-    public static final String ACTION_ON_NOTIFICATION_RECIEVED = "onNotificationRecieved";
+    public static final String ACTION_ON_NOTIFICATION_RECEIVED = "onNotificationReceived";
     private static CordovaWebView mWebView;
     private static String callback;
     private static String cacheResult;
@@ -61,7 +61,7 @@ public class LeanPush extends CordovaPlugin {
             this.getInstallation(callbackContext);
             return true;
         }
-        if(action.equals(ACTION_ON_NOTIFICATION_RECIEVED)){
+        if(action.equals(ACTION_ON_NOTIFICATION_RECEIVED)){
             onMessage(args.getString(0), callbackContext);
             return true;
         }
@@ -73,7 +73,7 @@ public class LeanPush extends CordovaPlugin {
         return false;
     }
 
-    private static void onNotificationRecieved(final String cb, final CallbackContext callbackContext){
+    private static void onNotificationReceived(final String cb, final CallbackContext callbackContext){
         callback = cb;
         callbackContext.success();
     }

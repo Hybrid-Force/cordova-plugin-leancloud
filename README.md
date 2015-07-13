@@ -43,7 +43,7 @@ Put the initialization Code in your "deviceReady" Code Block (like $ionicPlatfor
 window.LeanPush.init(function(){});
 ```
 
-The Init accepts a optional function as the callback when the notification recieves (The init simply call onMessage on this function).
+The Init accepts a optional function as the callback when the notification recieves (The init simply call onNotificationReceived on this function).
 
 
 
@@ -57,7 +57,7 @@ window.LeanPush.subscribe(channel, success, error)  // 订阅频道
 window.LeanPush.unsubscribe(channel, success, error) //退订频道
 window.LeanPush.clearSubscription(success, error) //退订所有频道
 window.LeanPush.getInstallation(success, error)  //Installation 表示一个允许推送的设备的唯一标示, 对应数据管理平台中的 _Installation 表
-window.LeanPush.onMessage(callback) // 一个notification到来的回调函数
+window.LeanPush.onNotificationReceived(callback) // 一个notification到来的回调函数
 ```
 
 Many Thanks to [Derek Hsu](https://github.com/Hybrid-Force) XD 😁
@@ -96,7 +96,7 @@ See the [Attention Below](#Attention), the webview can't `alert` when `onResume`
 
 ## Behavior
 
-The `onMessage callback`  and the `$rootScope.$emit('leancloud:notificationReceived')` will fires when
+The `onNotificationReceived callback`  and the `$rootScope.$emit('leancloud:notificationReceived')` will fires when
 
 ### IOS
 
@@ -126,6 +126,8 @@ In order to receive push from android, I change the default `MainActivity.java` 
 
 For Android, as far as I try, `alert` is fine, guess is the difference of webView between  IOS and android.
 
+
+### onNotification & $rootScope.$emit('leancloud:notificationReceived')
 
 
 ## LICENSE
