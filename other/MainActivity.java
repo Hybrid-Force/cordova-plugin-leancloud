@@ -39,6 +39,7 @@ public class MainActivity extends CordovaActivity
         if (extras != null)	{
             String data = extras.getString("com.avos.avoscloud.Data");
             if(data !=null){
+                getIntent().removeExtra("com.avos.avoscloud.Data");
                 LeanPush.sendJsonString(data);
             }else{
                 // LeanPush.sendJsonString(where+":data = null");
