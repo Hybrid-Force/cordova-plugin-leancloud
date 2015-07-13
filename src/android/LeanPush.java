@@ -28,7 +28,7 @@ public class LeanPush extends CordovaPlugin {
     public static final String ACTION_UNSUBSCRIBE = "unsubscribe";
     public static final String ACTION_CLEAR_SUBSCRIPTION = "clearSubscription";
     public static final String ACTION_GET_INSTALLTION = "getInstallation";
-    public static final String ACTION_ON_MESSAGE = "onMessage";
+    public static final String ACTION_ON_NOTIFICATION_RECIEVED = "onNotificationRecieved";
     private static CordovaWebView mWebView;
     private static String callback;
     private static String cacheResult;
@@ -61,7 +61,7 @@ public class LeanPush extends CordovaPlugin {
             this.getInstallation(callbackContext);
             return true;
         }
-        if(action.equals(ACTION_ON_MESSAGE)){
+        if(action.equals(ACTION_ON_NOTIFICATION_RECIEVED)){
             onMessage(args.getString(0), callbackContext);
             return true;
         }
@@ -73,7 +73,7 @@ public class LeanPush extends CordovaPlugin {
         return false;
     }
 
-    private static void onMessage(final String cb, final CallbackContext callbackContext){
+    private static void onNotificationRecieved(final String cb, final CallbackContext callbackContext){
         callback = cb;
         callbackContext.success();
     }
@@ -89,31 +89,31 @@ public class LeanPush extends CordovaPlugin {
 
     private void subscribe(final String channel, final CallbackContext callbackContext) {
         cordova.getThreadPool().execute(new Runnable() {
-            public void run() {
-                PushService.subscribe(cordova.getActivity(), channel, cordova.getActivity().getClass());
-                callbackContext.success();
-            }
-        });
+                public void run() {
+                    PushService.subscribe(cordova.getActivity(), channel, cordova.getActivity().getClass());
+                    callbackContext.success();
+                }
+            });
     }
 
     private void unsubscribe(final String channel, final CallbackContext callbackContext) {
         cordova.getThreadPool().execute(new Runnable() {
-            public void run() {
-                PushService.unsubscribe(cordova.getActivity(), channel);
-                callbackContext.success();
-            }
-        });
+                public void run() {
+                    PushService.unsubscribe(cordova.getActivity(), channel);
+                    callbackContext.success();
+                }
+            });
     }
 
     private void clearSubscription(final CallbackContext callbackContext) {
         cordova.getThreadPool().execute(new Runnable() {
-            public void run() {
-                AVInstallation currentInstallation = AVInstallation.getCurrentInstallation();
-                currentInstallation.put("channels", new ArrayList());
-                currentInstallation.saveInBackground();
-                callbackContext.success();
-            }
-        });
+                public void run() {
+                    AVInstallation currentInstallation = AVInstallation.getCurrentInstallation();
+                    currentInstallation.put("channels", new ArrayList());
+                    currentInstallation.saveInBackground();
+                    callbackContext.success();
+                }
+            });
     }
 
     private static void send(final String x){
@@ -130,8 +130,6 @@ public class LeanPush extends CordovaPlugin {
         }
     }
 
-    private void getCacheResult(final CallbackContext callbackContext) {
-        callbackContext.success(cacheResult);
-    }
-
+    private void getCacheResult(final CallbackContext callbackContext)} {
+    callbackContext.success(cacheResult);
 }

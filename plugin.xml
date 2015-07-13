@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="cordova-plugin-leanpush" version="0.1.0">
+  id="cordova-plugin-leanpush" version="0.1.1">
   <name>Cordova LeanCloud Push</name>
   <js-module src="www/LeanPush.js" name="LeanPush">
     <clobbers target="LeanPush"/>
@@ -78,9 +78,9 @@
       <meta-data android:name="leancloud" android:value="LeanCloud"/>
     </config-file>
     <config-file parent="/*" target="AndroidManifest.xml"/>
-    <source-file src="src/android/LeanApplication.java" target-dir="src/com/sum/cordova/leancloud"/>
-    <source-file src="src/android/LeanPush.java" target-dir="src/com/sum/cordova/leancloud"/>
-    <source-file src="src/android/LeanAnalytics.java" target-dir="src/com/sum/cordova/leancloud"/>
+    <source-file src="src/android/LeanApplication.java" target-dir="src/me/xyzhang/cordova/leanpush"/>
+    <source-file src="src/android/LeanPush.java" target-dir="src/me/xyzhang/cordova/leanpush"/>
+    <source-file src="src/android/LeanAnalytics.java" target-dir="src/me/xyzhang/cordova/leanpush"/>
     <source-file src="src/android/leancloud/Java-WebSocket-1.2.0-leancloud.jar" target-dir="libs" framework="true"/>
     <source-file src="src/android/leancloud/android-async-http-1.4.6.jar" target-dir="libs" framework="true"/>
     <source-file src="src/android/leancloud/avoscloud-push-v3.3.jar" target-dir="libs" framework="true"/>

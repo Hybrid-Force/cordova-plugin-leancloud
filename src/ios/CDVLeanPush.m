@@ -76,7 +76,7 @@
 
 
 
-- (void)onMessage:(CDVInvokedUrlCommand *)command
+- (void)onNotificationRecieved:(CDVInvokedUrlCommand *)command
 {
     self.callback = [command.arguments objectAtIndex:0];
 //    NSMutableDictionary* options = [command.arguments objectAtIndex:0];
@@ -90,11 +90,11 @@
 {
     NSArray         *keys = [inDictionary allKeys];
     NSString        *key;
-    
+
     for (key in keys)
     {
         id thisObject = [inDictionary objectForKey:key];
-        
+
         if ([thisObject isKindOfClass:[NSDictionary class]])
             [self parseDictionary:thisObject intoJSON:jsonString];
         else if ([thisObject isKindOfClass:[NSString class]])
@@ -108,7 +108,7 @@
             [jsonString appendFormat:@"\"%@\":\"%@\",", key, [inDictionary objectForKey:key]];
         }
     }
-    
+
 }
 
 
@@ -128,9 +128,9 @@
             jsonStr = [NSMutableString stringWithString:[jsonStr substringToIndex:[jsonStr length] - 1]];
         }
         [jsonStr appendString:@"}"];
-   
+
 //    NSString * jsonStr = [NSString stringWithFormat:@"%@", command];
-    
+
     if (self.callback) {
         NSString * jsCallBack = [NSString stringWithFormat:@"%@(%@);", self.callback,jsonStr];
         NSLog(jsCallBack) ;
@@ -143,7 +143,7 @@
 - (void) getCacheResult:(CDVInvokedUrlCommand *)command
 {
     CDVPluginResult* pluginResult = nil;
-    
+
     NSLog(@"CDVLeanPush getCacheResult = %@", self.cacheResult);
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:self.cacheResult];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
