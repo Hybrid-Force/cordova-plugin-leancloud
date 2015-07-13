@@ -43,7 +43,7 @@ Put the initialization Code in your "deviceReady" Code Block (like $ionicPlatfor
 window.LeanPush.init(function(){});
 ```
 
-The Init accepts a optional function as the callback when the notification recieves (The init simply call onNotificationReceived on this function).
+The Init accepts a optional function as the callback when the notification recieves *(Simply call onNotificationReceived on this function)*.
 
 
 
@@ -72,7 +72,16 @@ Use the [Restful Api](https://leancloud.cn/docs/push_guide.html) that leancloud 
 
 ### LeanAnalytics API
 
-Code is forked from [https://github.com/Hybrid-Force/cordova-plugin-leancloud](https://github.com/Hybrid-Force/cordova-plugin-leancloud). Only a novice for leancloud I am, I recommand you to take a look at the source code [https://github.com/BenBBear/cordova-plugin-leanpush/blob/master/www/LeanAnalytics.js](https://github.com/BenBBear/cordova-plugin-leanpush/blob/master/www/LeanAnalytics.js) to know the API, and study the [Leancloud documentation about leanAnalytics](https://leancloud.cn/docs/ios_statistics.html).
+Corresponding code is forked from [https://github.com/Hybrid-Force/cordova-plugin-leancloud](https://github.com/Hybrid-Force/cordova-plugin-leancloud).
+
+
+Only a novice for leancloud I am, so
+
+- take a look at the source code [https://github.com/BenBBear/cordova-plugin-leanpush/blob/master/www/LeanAnalytics.js](https://github.com/BenBBear/cordova-plugin-leanpush/blob/master/www/LeanAnalytics.js) to know the API
+
+- and study the [Leancloud documentation about leanAnalytics](https://leancloud.cn/docs/ios_statistics.html)
+
+is the better way to go.
 
 
 
@@ -117,18 +126,43 @@ The `onNotificationReceived callback`  and the `$rootScope.$emit('leancloud:noti
 
 ### Android Quirk
 
-In order to receive push from android, I change the default `MainActivity.java` that cordova generate in that gulp task. Details in the [cordova_leanpush_install.js]().
+In order to receive push from android, I change the default `MainActivity` and `Application Entry`  in that gulp task. Details in the [lpush_install.js](https://github.com/BenBBear/cordova-plugin-leanpush/blob/master/lpush-install.js).
 
+> So if you use another plugin that also goes this way, then there gonna be conflicts.
+
+
+#### Uninstall
+
+For fully uninstallation:
+
+```shell
+cordova plugin rm cordova-plugin-leanpush
+ionic platform rm android && ionic platform rm ios
+ionic platform add android && ionic platform add ios
+```
 
 ### Don't Use Alert in the IOS inside Notification Callback
 
-`alert` is a blocking function, it will cause the app to freeze when you launch the app from background by clicking notification. (It seems Ok when the app is in the foreground or closed.)
+> `alert` is a blocking function.
 
-For Android, as far as I try, `alert` is fine, guess is the difference of webView between  IOS and android.
+#### IOS UIWebView
+
+It will cause the app to freeze when you resume the app by clicking notification. (but it seems ok when the app is in the foreground or closed.)
+
+###  For Android
+
+As far as I try, `alert` is fine, guess is the difference of webView between  IOS and android.
 
 
-### onNotification & $rootScope.$emit('leancloud:notificationReceived')
+### Notification Handler
 
+There are two ways, both will be fired when notification comes
+
+- `onNotificationReceived`
+
+- `$rootScope.$emit('leancloud:notificationReceived')`
+
+It may not good to use both of them.
 
 ## LICENSE
 
