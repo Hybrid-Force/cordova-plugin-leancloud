@@ -45,10 +45,10 @@ See [Attention/Android Build Issue](#android-build-issue)
 Put the initialization Code in your "deviceReady" Code Block (like $ionicPlatform.ready)
 
 ```js
-window.LeanPush.init(function(){});
+window.LeanPush.init();
 ```
 
-The Init accepts a optional function as the callback when the notification recieves *(Simply call onNotificationReceived on this function)*.
+<!-- The Init accepts a optional function as the callback when the notification recieves *(If provided, it will call onNotificationReceived on this function)*. -->
 
 
 
@@ -63,6 +63,7 @@ window.LeanPush.unsubscribe(channel, success, error) //退订频道
 window.LeanPush.clearSubscription(success, error) //退订所有频道
 window.LeanPush.getInstallation(success, error)  //Installation 表示一个允许推送的设备的唯一标示, 对应数据管理平台中的 _Installation 表
 window.LeanPush.onNotificationReceived(callback) // 一个notification到来的回调函数
+$rootScope.$on('leancloud:notificationReceived') // 如果你用了angular， 一个notification会在scope上broadcast这个event
 ```
 
 Many Thanks to [Derek Hsu](https://github.com/Hybrid-Force) XD 😁
