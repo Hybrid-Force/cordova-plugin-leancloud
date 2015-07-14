@@ -72,7 +72,7 @@ Many Thanks to [Derek Hsu](https://github.com/Hybrid-Force) XD 😁
 
 ### About Sending Push
 
-Use the [Restful Api](https://leancloud.cn/docs/push_guide.html) that leancloud provide.
+Use the [Js Api: AV.Push](https://leancloud.cn/docs/js_guide.html#Push_通知) that leancloud provide.
 
 
 ### LeanAnalytics API
