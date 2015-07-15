@@ -39,7 +39,7 @@ public class LeanPush extends CordovaPlugin {
         super.initialize(cordova, webView);
         mWebView = webView;
         if(cacheResult != null){
-            sendJsonString(cacheResult, 'closed');
+            sendJsonString(cacheResult, "closed");
         }
     }
 
