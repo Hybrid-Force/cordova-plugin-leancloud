@@ -3,7 +3,14 @@ var exec = require('cordova/exec');
 module.exports = {
     getInstallation: function(success, error) {
         console.log('getInstallation');
-        exec(success, error, "LeanPush", "getInstallation", []);
+        exec(function(info) {
+            var a = info.split(',');
+            success({
+                'deviceType': a[0],
+                installationId: a[1],
+                'deviceToken': a[1]
+            });
+        }, error, "LeanPush", "getInstallation", []);
     },
     subscribe: function(channel, success, error) {
         console.log('subscribe', channel);
@@ -21,17 +28,22 @@ module.exports = {
     },
     init: function(fun) {
         console.log('LeanPush Initialization');
-        window.LeanPush.onNotificationReceived(fun || function(notice) {
-            console.log('leancloud:notificationReceived', notice);
-        });
+        window.LeanPush.onNotificationReceived(fun || function(notice) {});
 
-        window.LeanPush.init.__cb = function(x) {
-            var notice;
-            if (typeof x == 'string') {
-                notice = JSON.parse(x);
-            } else {
-                notice = x;
+        window.LeanPush.init.__cb = function(x, status) {
+            try {
+                var notice;
+                if (typeof x == 'string') {
+                    notice = JSON.parse(x) || {};
+                } else {
+                    notice = x;
+                }
+            } catch (e) {
+                notice = notice || {};                
+                notice.error = e;
             }
+            notice.prevAppState = status || 'closed';
+            console.log('leancloud:notificationReceived', notice);
             if (notice) {
                 if (typeof angular != 'undefined') {
                     var $body = angular.element(document.body);

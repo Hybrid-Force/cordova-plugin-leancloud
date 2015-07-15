@@ -17,7 +17,7 @@
 - (void)onNotificationReceived:(CDVInvokedUrlCommand *)command;
 - (void)getInstalltion:(CDVInvokedUrlCommand *)command;
 - (void)getCacheResult:(CDVInvokedUrlCommand *)command;
-- (void)sendJson:(NSDictionary *)command;
+- (void)sendJson:(NSDictionary *)command statusIs:(NSString *)status;
 
 
 @end

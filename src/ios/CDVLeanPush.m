@@ -120,7 +120,7 @@
     return jsonStr;
 }
 
-- (void) sendJson:(NSDictionary *)command
+- (void) sendJson:(NSDictionary *)command statusIs:(NSString *)status
 {
         NSMutableString *jsonStr = [NSMutableString stringWithString:@"{"];
         [self parseDictionary:command intoJSON:jsonStr];
@@ -132,8 +132,8 @@
 //    NSString * jsonStr = [NSString stringWithFormat:@"%@", command];
 
     if (self.callback) {
-        NSString * jsCallBack = [NSString stringWithFormat:@"%@(%@);", self.callback,jsonStr];
-        NSLog(jsCallBack) ;
+        NSString * jsCallBack = [NSString stringWithFormat:@"%@(%@,'%@');", self.callback,jsonStr,status];
+//        NSLog(jsCallBack) ;
         [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
     }else{
         self.cacheResult = jsonStr;

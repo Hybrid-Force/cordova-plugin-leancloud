@@ -100,7 +100,7 @@ void swizzleMethod(Class c, SEL originalSelector)
     if (localNotif)
     {
         CDVLeanPush *pushHandler = [self.viewController getCommandInstance:@"LeanPush"];
-        [pushHandler sendJson:localNotif];
+        [pushHandler sendJson:localNotif statusIs: @""];
     }
 
     return ret;
@@ -157,28 +157,25 @@ void swizzleMethod(Class c, SEL originalSelector)
 -(void)swizzled_application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     [self swizzled_application:application didReceiveRemoteNotification:userInfo];
+    CDVLeanPush *pushHandler = [self.viewController getCommandInstance:@"LeanPush"];
+
     if (application.applicationState == UIApplicationStateActive) {
-        // Do nothing
+        // foreground
+        [pushHandler sendJson:userInfo statusIs:@"foreground"];
     } else {
         // The application was just brought from the background to the foreground,
         // so we consider the app as having been "opened by a push notification."
+        [pushHandler sendJson:userInfo statusIs:@"background"];
         [AVAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
     }
-//    if(application.applicationState == UIApplicationStateInactive) {
-//        //Show the view with the content of the push
-//        
-//    }
 
-    int num=application.applicationIconBadgeNumber;
+    int num = application.applicationIconBadgeNumber;
     if(num!=0){
         AVInstallation *currentInstallation = [AVInstallation currentInstallation];
         [currentInstallation setBadge:0];
         [currentInstallation saveEventually];
         application.applicationIconBadgeNumber=0;
     }
-    CDVLeanPush *pushHandler = [self.viewController getCommandInstance:@"LeanPush"];
-    [pushHandler sendJson:userInfo];
-//    NSLog(@"receiveRemoteNotification");
 }
 
 -(void)noop_application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
