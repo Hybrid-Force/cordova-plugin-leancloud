@@ -58,12 +58,38 @@ window.LeanPush.init();
 Coresponding to the [Leancloud Push documentation](https://leancloud.cn/docs/ios_push_guide.html).
 
 ```js
+
 window.LeanPush.subscribe(channel, success, error)  // 订阅频道
 window.LeanPush.unsubscribe(channel, success, error) //退订频道
 window.LeanPush.clearSubscription(success, error) //退订所有频道
+
 window.LeanPush.getInstallation(success, error)  //Installation 表示一个允许推送的设备的唯一标示, 对应数据管理平台中的 _Installation 表
+// success callback:
+// function(data){
+//   data = {
+//        'deviceType':'android' or 'ios',
+//        'installationId': 'android installation id' or 'ios deviceToken'
+//        'deviceToken':    'ios deviceToken' or 'android installation id'
+//   }
+// }
+
+
 window.LeanPush.onNotificationReceived(callback) // 一个notification到来的回调函数
-$rootScope.$on('leancloud:notificationReceived') // 如果你用了angular， 一个notification会在scope上broadcast这个event
+// callback:
+// function(notice){
+//  notice = {
+//     'alert':'Notice Text',
+//     'file_url':'Push File',
+//     'key':'value'   if you send JSON Type Push, they will map to here.
+//   }
+// }
+    
+
+$rootScope.$on('leancloud:notificationReceived', callback) // 如果你用了angular， 一个notification会在scope上broadcast这个event
+// callback:
+// function(event, notice){
+//    // event is from angular, notice is same above 
+// }
 ```
 
 Many Thanks to [Derek Hsu](https://github.com/Hybrid-Force) XD 😁
@@ -73,7 +99,7 @@ Many Thanks to [Derek Hsu](https://github.com/Hybrid-Force) XD 😁
 
 ### About Sending Push
 
-Use the [Js Api: AV.Push](https://leancloud.cn/docs/js_guide.html#Push_通知) that leancloud provide.
+Use the [JS API: AV.Push](https://leancloud.cn/docs/js_guide.html#Push_通知) that leancloud provide.
 
 
 ### LeanAnalytics API
