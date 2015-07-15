@@ -78,6 +78,13 @@ window.LeanPush.onNotificationReceived(callback) // 一个notification到来的�
 // callback:
 // function(notice){
 //  notice = {
+//     'prevAppState': 'background' or 'foreground' or 'closed',
+
+//      push到来的时候上一个App状态:
+//      android只有 'background' 和 'closed', 因为android所有push都要点击
+//      ios都有，因为ios如果app在前台，系统推送的alert不会出现
+//      用户没有任何操作，app就自动执行notification的函数不好, 可以加个判断
+
 //     'alert':'Notice Text',
 //     'file_url':'Push File',
 //     'key':'value'   if you send JSON Type Push, they will map to here.
@@ -100,6 +107,7 @@ Many Thanks to [Derek Hsu](https://github.com/Hybrid-Force) XD 😁
 ### About Sending Push
 
 Use the [JS API: AV.Push](https://leancloud.cn/docs/js_guide.html#Push_通知) that leancloud provide.
+
 
 
 ### LeanAnalytics API
@@ -126,12 +134,31 @@ is the better way to go.
 
 ### IOS
 
-See the [Attention Below](#attention), the webview can't `alert` when `onResume`, so here only
+See the [Attention Below](#attention), the webview can't `alert` when `onResume`
 
-1. notice from close
-2. notice while foreground
+#### One
+
+- notice from close
+- notice while foreground
 
 ![](./img/ios.gif)
+
+#### Two
+
+- notice from background
+
+##### mobile
+
+![](./img/ios-back-phone.gif)
+
+##### console.log
+
+![](./img/ios-back.gif)
+
+The debugger in screenshot is [GapDebug](https://www.genuitec.com/products/gapdebug/), debug phonegap in browser :D
+
+
+
 
 
 
