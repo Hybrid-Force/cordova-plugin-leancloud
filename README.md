@@ -35,11 +35,6 @@ gulp.task('lpush-install', function(done){
 
 See [Attention/Android Build Issue](#android-build-issue)
 
-### TODO
-
-- ADD Push Notification History
-
- > 这个是很重要的， 比如在APP中， 不同的项目展示badge数目（有无新的通知）。 这个badge数由那些最新的push消息来计算，最为合理。 但是这个插件现在只能拿到一个push结果（用户点击的那个）。  如果不用push来计算badge，就挺麻烦的
 
 
 ## Usage
