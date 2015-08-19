@@ -59,9 +59,9 @@ Coresponding to the [Leancloud Push documentation](https://leancloud.cn/docs/ios
 
 ```js
 
-window.LeanPush.subscribe(channel, success, error)  // 订阅频道
-window.LeanPush.unsubscribe(channel, success, error) //退订频道
-window.LeanPush.clearSubscription(success, error) //退订所有频道
+window.LeanPush.subscribe(channel, success, error)  // 订阅频道 channel :string 
+window.LeanPush.unsubscribe(channel, success, error) //退订频道 channel :string
+window.LeanPush.clearSubscription(success, error) //退订所有频道 
 
 window.LeanPush.getInstallation(success, error)  //Installation 表示一个允许推送的设备的唯一标示, 对应数据管理平台中的 _Installation 表
 // success callback:
