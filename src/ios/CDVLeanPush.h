@@ -15,7 +15,7 @@
 - (void)unsubscribe:(CDVInvokedUrlCommand *)command;
 - (void)clearSubscription:(CDVInvokedUrlCommand *)command;
 - (void)onNotificationReceived:(CDVInvokedUrlCommand *)command;
-- (void)getInstalltion:(CDVInvokedUrlCommand *)command;
+- (void)getInstallation:(CDVInvokedUrlCommand *)command;
 - (void)getCacheResult:(CDVInvokedUrlCommand *)command;
 - (void)sendJson:(NSDictionary *)command statusIs:(NSString *)status;
 
