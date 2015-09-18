@@ -25,7 +25,7 @@ gulp.task('lpush-install', function(done){
 });
 ```
 
-- `npm install --save-dev xml2js && npm install`
+- `npm install --save-dev xml2js thunks && npm install`
 
 - Then exectue this gulp task by running `gulp lpush-install` in shell.
 

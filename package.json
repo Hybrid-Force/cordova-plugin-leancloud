@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-leanpush",
-  "version": "0.3.1",
+  "version": "0.3.3",
   "description": "A Cordova plugin for LeanCloud Push and Analytics services",
   "cordova": {
     "id": "cordova-plugin-leanpush",
