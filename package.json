@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-leanpush",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "A Cordova plugin for LeanCloud Push and Analytics services",
   "cordova": {
     "id": "cordova-plugin-leanpush",
@@ -26,5 +26,9 @@
   "bugs": {
     "url": "https://github.com/BenBBear/cordova-plugin-leanpush/issues"
   },
-  "homepage": "https://github.com/BenBBear/cordova-plugin-leanpush"
+  "homepage": "https://github.com/BenBBear/cordova-plugin-leanpush",
+  "devDependencies": {
+    "thunks": "^3.5.1",
+    "xml2js": "^0.4.12"
+  }
 }
