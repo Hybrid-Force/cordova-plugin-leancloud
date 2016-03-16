@@ -134,7 +134,14 @@
     if (self.callback) {
         NSString * jsCallBack = [NSString stringWithFormat:@"%@(%@,'%@');", self.callback,jsonStr,status];
 //        NSLog(jsCallBack) ;
-        [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
+        // [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
+        if ([self.webView respondsToSelector:@selector(stringByEvaluatingJavaScriptFromString:)]) {
+          // Cordova-iOS pre-4
+          [self.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsCallBack waitUntilDone:NO];
+        } else {
+          // Cordova-iOS 4+
+          [self.webView performSelectorOnMainThread:@selector(evaluateJavaScript:completionHandler:) withObject:jsCallBack waitUntilDone:NO];
+        }
     }else{
         self.cacheResult = jsonStr;
     }
