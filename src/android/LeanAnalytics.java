@@ -1,4 +1,4 @@
-package com.sum.cordova.leancloud;
+package me.xyzhang.cordova.leanpush;
 
 import java.util.HashMap;
 

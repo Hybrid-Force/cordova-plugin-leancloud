@@ -56,131 +56,105 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)onViewStart:(CDVInvokedUrlCommand*)command
+
+- (void)getInstallation:(CDVInvokedUrlCommand *)command
 {
-    CDVPluginResult* pluginResult = nil;
-    NSString* viewId = [command.arguments objectAtIndex:0];
+  CDVPluginResult* pluginResult = nil;
 
-    NSLog(@"CDVLeanPush onViewStart %@", viewId);
+  NSLog(@"CDVLeanPush getInstallation");
 
-    if (viewId != nil && [viewId length] > 0) {
-        [AVAnalytics beginLogPageView:viewId];
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-    }
+  AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+  if(currentInstallation != nil && currentInstallation.deviceToken != nil) {
+    NSLog(@"device token: %@", currentInstallation.deviceToken);
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[NSString stringWithFormat:@"ios,%@", currentInstallation.deviceToken]];
+  } else {
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Fail to get Installation."];
+  }
 
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)onViewEnd:(CDVInvokedUrlCommand*)command
+
+
+- (void)onNotificationReceived:(CDVInvokedUrlCommand *)command
 {
-    CDVPluginResult* pluginResult = nil;
-    NSString* viewId = [command.arguments objectAtIndex:0];
-
-    NSLog(@"CDVLeanPush onViewEnd %@", viewId);
-
-    if (viewId != nil && [viewId length] > 0) {
-        [AVAnalytics endLogPageView:viewId];
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-    }
-
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    self.callback = [command.arguments objectAtIndex:0];
+//    NSMutableDictionary* options = [command.arguments objectAtIndex:0];
+//    self.callback = [options objectForKey:@"ecb"];
+    CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"onMessage Success"];
+    [self.commandDelegate sendPluginResult:commandResult callbackId:command.callbackId];
 }
 
-- (void)event:(CDVInvokedUrlCommand*)command
+
+-(void)parseDictionary:(NSDictionary *)inDictionary intoJSON:(NSMutableString *)jsonString
 {
-    CDVPluginResult* pluginResult = nil;
-    NSString* eventId = [command argumentAtIndex:0 withDefault:nil];
-    NSString* label = [command argumentAtIndex:1 withDefault:nil];
+    NSArray         *keys = [inDictionary allKeys];
+    NSString        *key;
 
-    NSLog(@"CDVLeanPush event %@ %@", eventId, label);
+    for (key in keys)
+    {
+        id thisObject = [inDictionary objectForKey:key];
 
-    if (eventId != nil && [eventId length] > 0) {
-        [AVAnalytics event:eventId label:label];
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        if ([thisObject isKindOfClass:[NSDictionary class]])
+            [self parseDictionary:thisObject intoJSON:jsonString];
+        else if ([thisObject isKindOfClass:[NSString class]])
+            [jsonString appendFormat:@"\"%@\":\"%@\",",
+             key,
+             [[[[inDictionary objectForKey:key]
+                stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"]
+               stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""]
+              stringByReplacingOccurrencesOfString:@"\n" withString:@"\\n"]];
+        else {
+            [jsonString appendFormat:@"\"%@\":\"%@\",", key, [inDictionary objectForKey:key]];
+        }
     }
 
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)onEventStart:(CDVInvokedUrlCommand*)command
+
+- (NSString *)toJsonString:(NSDictionary *)dict;
+{
+    NSMutableString *jsonStr = [NSMutableString stringWithString:@"{"];
+    [self parseDictionary:dict intoJSON:jsonStr];
+    [jsonStr appendString:@"}"];
+    return jsonStr;
+}
+
+- (void) sendJson:(NSDictionary *)command statusIs:(NSString *)status
+{
+        NSMutableString *jsonStr = [NSMutableString stringWithString:@"{"];
+        [self parseDictionary:command intoJSON:jsonStr];
+        if ([jsonStr length] > 0) {
+            jsonStr = [NSMutableString stringWithString:[jsonStr substringToIndex:[jsonStr length] - 1]];
+        }
+        [jsonStr appendString:@"}"];
+
+//    NSString * jsonStr = [NSString stringWithFormat:@"%@", command];
+
+    if (self.callback) {
+        NSString * jsCallBack = [NSString stringWithFormat:@"%@(%@,'%@');", self.callback,jsonStr,status];
+//        NSLog(jsCallBack) ;
+        // [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
+        if ([self.webView respondsToSelector:@selector(stringByEvaluatingJavaScriptFromString:)]) {
+          // Cordova-iOS pre-4
+          [self.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsCallBack waitUntilDone:NO];
+        } else {
+          // Cordova-iOS 4+
+          [self.webView performSelectorOnMainThread:@selector(evaluateJavaScript:completionHandler:) withObject:jsCallBack waitUntilDone:NO];
+        }
+    }else{
+        self.cacheResult = jsonStr;
+    }
+}
+
+- (void) getCacheResult:(CDVInvokedUrlCommand *)command
 {
     CDVPluginResult* pluginResult = nil;
-    NSString* eventId = [command argumentAtIndex:0 withDefault:nil];
-    NSString* label = [command argumentAtIndex:1 withDefault:nil];
 
-    NSLog(@"CDVLeanPush onEventStart %@ %@", eventId, label);
-
-    if (eventId != nil && [eventId length] > 0) {
-        [AVAnalytics beginEvent:eventId label:label];
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-    }
-
+    NSLog(@"CDVLeanPush getCacheResult = %@", self.cacheResult);
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:self.cacheResult];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    self.cacheResult = NULL;
+
 }
-
-- (void)onEventEnd:(CDVInvokedUrlCommand*)command
-{
-    CDVPluginResult* pluginResult = nil;
-    NSString* eventId = [command argumentAtIndex:0 withDefault:nil];
-    NSString* label = [command argumentAtIndex:1 withDefault:nil];
-
-    NSLog(@"CDVLeanPush onEventEnd %@ %@", eventId, label);
-
-    if (eventId != nil && [eventId length] > 0) {
-        [AVAnalytics endEvent:eventId label:label];
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-    }
-
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-}
-
-- (void)onKVEventStart:(CDVInvokedUrlCommand*)command
-{
-    CDVPluginResult* pluginResult = nil;
-    NSString* eventId = [command argumentAtIndex:0 withDefault:nil];
-    NSString* keyName = [command argumentAtIndex:1 withDefault:nil];
-    NSString* attr = [command argumentAtIndex:2 withDefault:nil];
-    NSString* value = [command argumentAtIndex:3 withDefault:nil];
-
-    NSLog(@"CDVLeanPush onKVEventStart %@ %@ {%@:%@}", eventId, keyName, attr, value);
-
-    if (eventId != nil && [eventId length] > 0) {
-        NSDictionary *attrs = [NSDictionary dictionaryWithObject:value forKey:attr];
-        [AVAnalytics beginEvent:eventId primarykey:keyName attributes:attrs];
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-    }
-
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-}
-
-- (void)onKVEventEnd:(CDVInvokedUrlCommand*)command
-{
-    CDVPluginResult* pluginResult = nil;
-    NSString* eventId = [command argumentAtIndex:0 withDefault:nil];
-    NSString* keyName = [command argumentAtIndex:1 withDefault:nil];
-
-    NSLog(@"CDVLeanPush onKVEventEnd %@ %@", eventId, keyName);
-
-    if (eventId != nil && [eventId length] > 0) {
-        [AVAnalytics endEvent:eventId primarykey:keyName];
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-    }
-
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-}
-
 @end

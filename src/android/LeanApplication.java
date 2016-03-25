@@ -1,4 +1,4 @@
-package com.sum.cordova.leancloud;
+package me.xyzhang.cordova.leanpush;
 
 import android.app.Application;
 import android.content.Context;
@@ -8,9 +8,9 @@ import com.avos.avoscloud.AVInstallation;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVAnalytics;
 
-import <%MAINACTIVITY%>;
+import <%PACKAGE_NAME%>.MainActivity;
 
-public class LeanApplication extends Application 
+public class LeanApplication extends Application
 {
     private static LeanApplication instance = new LeanApplication();
 
@@ -26,9 +26,11 @@ public class LeanApplication extends Application
     public void onCreate() {
         super.onCreate();
         // register device for leancloud
-        AVOSCloud.initialize(this, "<%APPID%>", "<%APPKEY%>");
-        PushService.setDefaultPushCallback(this, MainActivity.class);
+        AVOSCloud.initialize(this, "<%LEAN_APP_ID%>", "<%LEAN_APP_KEY%>");
         AVInstallation.getCurrentInstallation().saveInBackground();
-        AVAnalytics.enableCrashReport(this, true);
+        PushService.setDefaultPushCallback(this, MainActivity.class);
+        AVAnalytics.enableCrashReport(this.getApplicationContext(), true);
+        AVOSCloud.setLastModifyEnabled(true);
+        AVOSCloud.setDebugLogEnabled(true);
     }
 }

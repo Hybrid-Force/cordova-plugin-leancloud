@@ -8,7 +8,7 @@
 void swizzleMethod(Class c, SEL originalSelector)
 {
     NSString *original = NSStringFromSelector(originalSelector);
-    
+
     SEL swizzledSelector = NSSelectorFromString([@"swizzled_" stringByAppendingString:original]);
     SEL noopSelector = NSSelectorFromString([@"noop_" stringByAppendingString:original]);
 
@@ -16,12 +16,12 @@ void swizzleMethod(Class c, SEL originalSelector)
     originalMethod = class_getInstanceMethod(c, originalSelector);
     swizzledMethod = class_getInstanceMethod(c, swizzledSelector);
     noop = class_getInstanceMethod(c, noopSelector);
-    
+
     BOOL didAddMethod = class_addMethod(c,
                     originalSelector,
                     method_getImplementation(swizzledMethod),
                     method_getTypeEncoding(swizzledMethod));
-    
+
     if (didAddMethod)
     {
         class_replaceMethod(c,
@@ -40,7 +40,7 @@ void swizzleMethod(Class c, SEL originalSelector)
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         Class cls = [self class];
-        
+
         swizzleMethod(cls, @selector(application:didFinishLaunchingWithOptions:));
         swizzleMethod(cls, @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:));
         swizzleMethod(cls, @selector(application:didFailToRegisterForRemoteNotificationsWithError:));
@@ -55,7 +55,7 @@ void swizzleMethod(Class c, SEL originalSelector)
     // So, when calling swizzled_application, we are actually calling the original application method
     // similar with subclass calling super method. Neat!
     BOOL ret = [self swizzled_application:application didFinishLaunchingWithOptions:launchOptions];
-    
+
     if (ret) {
         // 1. Initialize LeanCloud
         // 2. Send analysis info
@@ -65,7 +65,7 @@ void swizzleMethod(Class c, SEL originalSelector)
         if (appId && appKey) {
             // init
             [AVOSCloud setApplicationId:appId clientKey:appKey];
-            
+
             // analysis
             if (application.applicationState != UIApplicationStateBackground) {
                 // Track an app open here if we launch with a push, unless
@@ -95,7 +95,14 @@ void swizzleMethod(Class c, SEL originalSelector)
             NSLog(@"LeanCloud app ID/key not specified");
         }
     }
+    NSDictionary *localNotif = [launchOptions objectForKey:@"UIApplicationLaunchOptionsRemoteNotificationKey"];
     
+    if (localNotif)
+    {
+        CDVLeanPush *pushHandler = [self.viewController getCommandInstance:@"LeanPush"];
+        [pushHandler sendJson:localNotif statusIs: @""];
+    }
+
     return ret;
 }
 
@@ -150,24 +157,25 @@ void swizzleMethod(Class c, SEL originalSelector)
 -(void)swizzled_application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     [self swizzled_application:application didReceiveRemoteNotification:userInfo];
+    CDVLeanPush *pushHandler = [self.viewController getCommandInstance:@"LeanPush"];
 
     if (application.applicationState == UIApplicationStateActive) {
-        // Do nothing
+        // foreground
+        [pushHandler sendJson:userInfo statusIs:@"foreground"];
     } else {
         // The application was just brought from the background to the foreground,
         // so we consider the app as having been "opened by a push notification."
+        [pushHandler sendJson:userInfo statusIs:@"background"];
         [AVAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
     }
 
-    int num=application.applicationIconBadgeNumber;
+    int num = application.applicationIconBadgeNumber;
     if(num!=0){
         AVInstallation *currentInstallation = [AVInstallation currentInstallation];
         [currentInstallation setBadge:0];
         [currentInstallation saveEventually];
         application.applicationIconBadgeNumber=0;
     }
-    
-    NSLog(@"receiveRemoteNotification");
 }
 
 -(void)noop_application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo

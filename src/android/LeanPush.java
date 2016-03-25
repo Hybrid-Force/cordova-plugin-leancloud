@@ -1,4 +1,4 @@
-package com.sum.cordova.leancloud;
+package me.xyzhang.cordova.leanpush;
 
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -27,20 +27,20 @@ public class LeanPush extends CordovaPlugin {
     public static final String ACTION_SUBSCRIBE = "subscribe";
     public static final String ACTION_UNSUBSCRIBE = "unsubscribe";
     public static final String ACTION_CLEAR_SUBSCRIPTION = "clearSubscription";
+    public static final String ACTION_GET_INSTALLTION = "getInstallation";
+    public static final String ACTION_ON_NOTIFICATION_RECEIVED = "onNotificationReceived";
+    private static CordovaWebView mWebView;
+    private static String callback;
+    private static String cacheResult;
+
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-
-        // String appId = this.preferences.getString(PROP_KEY_LEANCLOUD_APP_ID, "");
-        // String appKey = this.preferences.getString(PROP_KEY_LEANCLOUD_APP_KEY, "");
-        
-        // if (appId != null && !appId.isEmpty() &&
-        //     appKey != null && !appKey.isEmpty()) {
-        //     AVOSCloud.initialize(cordova.getActivity(), appId, appKey);
-        //     PushService.setDefaultPushCallback(cordova.getActivity(), cordova.getActivity().getClass());
-        //     AVInstallation.getCurrentInstallation().saveInBackground();
-        // }
+        mWebView = webView;
+        if(cacheResult != null){
+            sendJsonString(cacheResult, "closed");
+        }
     }
 
     @Override
@@ -57,35 +57,80 @@ public class LeanPush extends CordovaPlugin {
             this.clearSubscription(callbackContext);
             return true;
         }
+        if(action.equals(ACTION_GET_INSTALLTION)){
+            this.getInstallation(callbackContext);
+            return true;
+        }
+        if(action.equals(ACTION_ON_NOTIFICATION_RECEIVED)){
+            onNotificationReceived(args.getString(0), callbackContext);
+            return true;
+        }
+        if(action.equals("getCacheResult")){
+            getCacheResult(callbackContext);
+            return true;
+        }
+
         return false;
+    }
+
+    private static void onNotificationReceived(final String cb, final CallbackContext callbackContext){
+        callback = cb;
+        callbackContext.success();
+    }
+
+    private void getInstallation(final CallbackContext callbackContext) {
+        String installationId = AVInstallation.getCurrentInstallation().getInstallationId();
+        if (installationId == null) {
+            callbackContext.error("Fail to get Installation.");
+        } else {
+            callbackContext.success("android," + installationId);
+        }
     }
 
     private void subscribe(final String channel, final CallbackContext callbackContext) {
         cordova.getThreadPool().execute(new Runnable() {
-            public void run() {
-                PushService.subscribe(cordova.getActivity(), channel, cordova.getActivity().getClass());
-                callbackContext.success();
-            }
-        });
+                public void run() {
+                    PushService.subscribe(cordova.getActivity(), channel, cordova.getActivity().getClass());
+                    callbackContext.success();
+                }
+            });
     }
 
     private void unsubscribe(final String channel, final CallbackContext callbackContext) {
         cordova.getThreadPool().execute(new Runnable() {
-            public void run() {
-                PushService.unsubscribe(cordova.getActivity(), channel);
-                callbackContext.success();
-            }
-        });
+                public void run() {
+                    PushService.unsubscribe(cordova.getActivity(), channel);
+                    callbackContext.success();
+                }
+            });
     }
 
     private void clearSubscription(final CallbackContext callbackContext) {
         cordova.getThreadPool().execute(new Runnable() {
-            public void run() {
-                AVInstallation currentInstallation = AVInstallation.getCurrentInstallation();
-                currentInstallation.put("channels", new ArrayList());
-                currentInstallation.saveInBackground();
-                callbackContext.success();
-            }
-        });
+                public void run() {
+                    AVInstallation currentInstallation = AVInstallation.getCurrentInstallation();
+                    currentInstallation.put("channels", new ArrayList());
+                    currentInstallation.saveInBackground();
+                    callbackContext.success();
+                }
+            });
+    }
+
+    private static void send(final String x, final String status){
+        mWebView.loadUrl("javascript:" + callback +"('" +  x + "', '" + status + "');");
+    }
+
+
+    public static void sendJsonString(final String x, final String status){
+        if(mWebView != null && callback != null){
+            send(x, status);
+            cacheResult = null;
+        }else{
+            cacheResult = x;
+        }
+    }
+
+    private void getCacheResult(final CallbackContext callbackContext){
+    callbackContext.success(cacheResult);
     }
 }
